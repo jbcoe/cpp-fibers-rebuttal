@@ -29,9 +29,11 @@ The goal for fibers is to be faster for context switching than normal thread swi
 ## What is the current proposal?
 
 The current proposal is for fibers independent of any kind of scheduler.
-Schedulers 
+This is intended to allow cooperative multitasking between fibers scheduled on one or more (preemptively scheduled) OS threads.
 
 ## Issues with the current proposal
+
+The current proposal has several issues that will be discussed in detail.
 
 ### What is a context?
 
@@ -66,6 +68,7 @@ If a fiber switch occurs in a `catch` block, this linked list can be corrupted.
 
 Unfortunately, this is a general problem.
 If a library creates any kind of linked list in thread-local storage that follows lexical scope, this will be corrupted.
+Note that this does not rely on a fiber migrating between threads (which would be disallowed by P0876R19), though permitting this would introduce more problems.
 Variations of this idiom occur in various forms.
 For example:
 
@@ -140,6 +143,10 @@ This is easy to do when fibers are introduced at the lowest level of the stack, 
 For example, the C++ ABI / runtime library for Itanium ABI implementations provides features for thread-safe static initialisation.
 These define the lock that is used to protect calls to the constructor for function-local `static` variables with non-trivial constructors.
 This cannot be made fiber-safe with the current proposal because fibers are implemented in the standard library, which sits at a higher level in the stack.
+
+One of the follow-on proposals suggests addressing the TLS-related issues discussed earlier by requiring all TLS to be replaced with fiber-local storage, an approach taken by Windows UWP applications.
+This would further complicate the layering issues because, on most platforms, TLS is provided one or two layers below the C++ stack and so is out of the control of a C++ implementation.
+C11 introduced `_Thread_local`, which is currently equivalent to C++11's `thread_local`, but would not be if `thread_local` became fiber-local and the underling platform did not support fibers.
 
 ## Summary
 
