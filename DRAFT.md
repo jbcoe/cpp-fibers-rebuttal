@@ -10,7 +10,7 @@ Date: 2025-02-03
 
 _David Chisnall \<<David.Chisnall@cl.cam.ac.uk>\>_
 
-_Jonathan Coe \<<jonathanbcoe@gmail.com>\>_
+_Matthew Taylor \<<mjtaylor214@hotmail.com>\>_
 
 ## Introduction
 
